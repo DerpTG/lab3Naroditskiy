@@ -7,14 +7,14 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
-public class MongoDBCRUD {
+public class MongoCRUD {
     private MongoClient mongoClient;
     private MongoDatabase database;
     private MongoCollection<Document> collection;
     private String databaseName;
     private String collectionName;
 
-    public MongoDBCRUD(String databaseName, String collectionName) {
+    public MongoCRUD(String databaseName, String collectionName) {
         this.databaseName = databaseName;
         this.collectionName = collectionName;
         initializeConnection();
