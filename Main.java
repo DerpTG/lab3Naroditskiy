@@ -35,7 +35,31 @@ public class Main {
                 System.out.println("Customer added successfully.");
             } else if (choice == 2) {
 
-                // MongoDB interaction would go here
+                // Insert a new customer into MongoDB
+                System.out.println("Interacting with MongoDB database to add and list customers.");
+                System.out.print("Enter ID: ");
+                int id = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                System.out.print("Enter First Name: ");
+                String firstName = scanner.nextLine();
+                System.out.print("Enter Last Name: ");
+                String lastName = scanner.nextLine();
+                System.out.print("Enter City: ");
+                String city = scanner.nextLine();
+                System.out.print("Enter Email: ");
+                String email = scanner.nextLine();
+
+                MongoCRUD mongoDBCRUD = new MongoCRUD("your_database_name", "customers");
+                mongoDBCRUD.insertCustomer(id, firstName, lastName, city, email);
+                System.out.println("Inserted new customer into MongoDB.");
+
+                // List all customers
+                System.out.println("Listing all customers from MongoDB:");
+                mongoDBCRUD.listCustomers();
+
+                // Close MongoDB connection
+                mongoDBCRUD.close();
+                System.out.println("MongoDB interaction completed.");
             } else if (choice == 3) {
 
                 // Redis interaction would go here
