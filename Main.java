@@ -16,12 +16,11 @@ public class Main {
             scanner.nextLine();
 
             if (choice == 1) {
-                // MySQL interaction
                 System.out.println("Interacting with MySQL database.");
                 System.out.println("Please enter customer details.");
                 System.out.print("Enter ID: ");
                 int id = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
                 System.out.print("Enter First Name: ");
                 String firstName = scanner.nextLine();
                 System.out.print("Enter Last Name: ");
