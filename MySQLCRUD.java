@@ -3,8 +3,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MySQLCRUD {
     private String jdbcUrl;
@@ -33,26 +31,25 @@ public class MySQLCRUD {
         }
     }
 
-    // Method to get all customers
-    public List<Customer> getAllCustomers() {
-        List<Customer> customers = new ArrayList<>();
+    // Method to view all customers
+    public void getAllCustomers() {
         String sql = "SELECT id, firstName, lastName, city, email FROM customers";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                customers.add(new Customer(
+                Customer customer = new Customer(
                         resultSet.getInt("id"),
                         resultSet.getString("firstName"),
                         resultSet.getString("lastName"),
                         resultSet.getString("city"),
                         resultSet.getString("email")
-                ));
+                );
+                System.out.println(customer);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return customers;
     }
 
     // Method to update a customer

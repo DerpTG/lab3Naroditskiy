@@ -3,8 +3,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 public class MongoCRUD {
@@ -26,9 +24,8 @@ public class MongoCRUD {
         collection = database.getCollection(collectionName);
     }
 
-    public void insertCustomer(int id, String firstName, String lastName, String city, String email) {
-        Document newCustomer = new Document("id", id)
-                .append("first_name", firstName)
+    public void insertCustomer(String firstName, String lastName, String city, String email) {
+        Document newCustomer = new Document("first_name", firstName)
                 .append("last_name", lastName)
                 .append("city", city)
                 .append("email", email);
@@ -49,8 +46,8 @@ public class MongoCRUD {
         System.out.println("Customer with first name '" + oldFirstName + "' has been updated to new first name '" + newFirstName + "'.");
     }
 
-    public void deleteCustomer(int id) {
-        collection.deleteOne(Filters.eq("id", id));
+    public void deleteCustomer(String name) {
+        collection.deleteOne(new Document("first_name", name));
         System.out.println("Customer deleted successfully.");
     }
 
@@ -67,7 +64,6 @@ public class MongoCRUD {
 
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
-        // Reinitialize connection because database name changed
         initializeConnection();
     }
 
@@ -77,7 +73,6 @@ public class MongoCRUD {
 
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
-        // Reinitialize connection because collection name changed
         initializeConnection();
     }
 }
