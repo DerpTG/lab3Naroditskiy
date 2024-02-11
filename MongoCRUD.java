@@ -1,3 +1,4 @@
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -19,36 +20,56 @@ public class MongoCRUD {
     }
 
     private void initializeConnection() {
-        mongoClient = MongoClients.create("mongodb://localhost:27017");
-        database = mongoClient.getDatabase(databaseName);
-        collection = database.getCollection(collectionName);
+        try {
+            mongoClient = MongoClients.create("mongodb://localhost:27017");
+            database = mongoClient.getDatabase(databaseName);
+            collection = database.getCollection(collectionName);
+        } catch (MongoException e) {
+            System.err.println("An error occurred while establishing a connection to MongoDB: " + e.getMessage());
+        }
     }
 
     public void insertCustomer(String firstName, String lastName, String city, String email) {
-        Document newCustomer = new Document("first_name", firstName)
-                .append("last_name", lastName)
-                .append("city", city)
-                .append("email", email);
-        collection.insertOne(newCustomer);
-        System.out.println("Customer added successfully.");
+        try {
+            Document newCustomer = new Document("first_name", firstName)
+                    .append("last_name", lastName)
+                    .append("city", city)
+                    .append("email", email);
+            collection.insertOne(newCustomer);
+            System.out.println("Customer added successfully.");
+        } catch (MongoException e) {
+            System.err.println("An error occurred while inserting a customer: " + e.getMessage());
+        }
     }
 
     public void listCustomers() {
-        FindIterable<Document> customers = collection.find();
-        for (Document customer : customers) {
-            System.out.println(customer.toJson());
+        try {
+            FindIterable<Document> customers = collection.find();
+            for (Document customer : customers) {
+                System.out.println(customer.toJson());
+            }
+        } catch (MongoException e) {
+            System.err.println("An error occurred while listing customers: " + e.getMessage());
         }
     }
 
     public void updateCustomer(String oldFirstName, String newFirstName) {
-        Document updatedCustomer = new Document("$set", new Document("first_name", newFirstName));
-        collection.updateOne(new Document("first_name", oldFirstName), updatedCustomer);
-        System.out.println("Customer with first name '" + oldFirstName + "' has been updated to new first name '" + newFirstName + "'.");
+        try {
+            Document updatedCustomer = new Document("$set", new Document("first_name", newFirstName));
+            collection.updateOne(new Document("first_name", oldFirstName), updatedCustomer);
+            System.out.println("Customer with first name '" + oldFirstName + "' has been updated to new first name '" + newFirstName + "'.");
+        } catch (MongoException e) {
+            System.err.println("An error occurred while updating a customer: " + e.getMessage());
+        }
     }
 
     public void deleteCustomer(String name) {
-        collection.deleteOne(new Document("first_name", name));
-        System.out.println("Customer deleted successfully.");
+        try {
+            collection.deleteOne(new Document("first_name", name));
+            System.out.println("Customer deleted successfully.");
+        } catch (MongoException e) {
+            System.err.println("An error occurred while deleting a customer: " + e.getMessage());
+        }
     }
 
     public void close() {
@@ -57,23 +78,23 @@ public class MongoCRUD {
         }
     }
 
-    // Getters and Setters for databaseName and collectionName
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
+    // Getters and Setters
+    public String getDatabaseName() { return databaseName; }
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
-        initializeConnection();
+        // Reinitialize connection only if mongoClient is already initialized
+        if (mongoClient != null) {
+            initializeConnection();
+        }
     }
 
-    public String getCollectionName() {
-        return collectionName;
-    }
-
+    public String getCollectionName() { return collectionName; }
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
-        initializeConnection();
+        // Reinitialize connection only if mongoClient is already initialized
+        if (mongoClient != null) {
+            initializeConnection();
+        }
     }
 }
 

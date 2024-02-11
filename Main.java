@@ -114,8 +114,60 @@ public class Main {
                 mongoDBCRUD.close();
                 System.out.println("MongoDB interaction completed.");
             } else if (choice == 3) {
+                RedisCRUD redisCRUD = new RedisCRUD(); // Assumes Redis is running on localhost with default settings
+                System.out.println("Interacting with Redis database.");
+                System.out.println("1. Insert a new customer");
+                System.out.println("2. Get a customer's details");
+                System.out.println("3. Update a customer's details");
+                System.out.println("4. Delete a customer");
+                System.out.print("Select an operation: ");
+                int operation = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline
 
-                // Redis
+                if (operation == 1) {
+                    // Insert a new customer
+                    System.out.println("Inserting a new customer. Please enter the following details:");
+                    System.out.print("Customer ID: ");
+                    String id = scanner.nextLine();
+                    System.out.print("First Name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last Name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("City: ");
+                    String city = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+                    redisCRUD.insertCustomer(id, firstName, lastName, city, email);
+                } else if (operation == 2) {
+                    // Get a customer's details
+                    System.out.print("Enter Customer ID to retrieve: ");
+                    String id = scanner.nextLine();
+                    redisCRUD.getCustomer(id);
+                } else if (operation == 3) {
+                    // Update a customer's details
+                    System.out.println("Updating a customer. Please enter the following details:");
+                    System.out.print("Customer ID: ");
+                    String id = scanner.nextLine();
+                    System.out.print("First Name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last Name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("City: ");
+                    String city = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+                    redisCRUD.updateCustomer(id, firstName, lastName, city, email);
+                } else if (operation == 4) {
+                    // Delete a customer
+                    System.out.print("Enter Customer ID to delete: ");
+                    String id = scanner.nextLine();
+                    redisCRUD.deleteCustomer(id);
+                } else {
+                    System.out.println("Invalid operation selected.");
+                }
+
+                // Close the connection to Redis
+                redisCRUD.closeConnection();
             } else if (choice == 4) {
 
                 // Blockchain
