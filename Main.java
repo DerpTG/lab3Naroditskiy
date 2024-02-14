@@ -71,10 +71,10 @@ public class Main {
                 System.out.println("3. Update a customer");
                 System.out.println("4. Delete a customer");
                 System.out.print("Select an operation: ");
-                int mongoOperation = scanner.nextInt();
+                int operation = scanner.nextInt();
                 scanner.nextLine();
 
-                if (mongoOperation == 1) {
+                if (operation == 1) {
                     // Insert a new customer
                     System.out.println("Please enter customer details.");
                     System.out.print("Enter First Name: ");
@@ -88,11 +88,11 @@ public class Main {
 
                     mongoDBCRUD.insertCustomer(firstName, lastName, city, email);
                     System.out.println("Inserted new customer into MongoDB.");
-                } else if (mongoOperation == 2) {
+                } else if (operation == 2) {
                     // List all customers
                     System.out.println("Listing all customers from MongoDB:");
                     mongoDBCRUD.listCustomers();
-                } else if (mongoOperation == 3) {
+                } else if (operation == 3) {
                     // Update a customer
                     System.out.println("Please enter the first name of the customer to update:");
                     String oldFirstName = scanner.nextLine();
@@ -100,7 +100,7 @@ public class Main {
                     String newFirstName = scanner.nextLine();
                     mongoDBCRUD.updateCustomer(oldFirstName, newFirstName);
                     System.out.println("Customer updated successfully.");
-                } else if (mongoOperation == 4) {
+                } else if (operation == 4) {
                     // Delete a customer
                     System.out.println("Please enter the first name of the customer to delete:");
                     String nameToDelete = scanner.nextLine();
@@ -169,8 +169,34 @@ public class Main {
                 // Close the connection to Redis
                 redisCRUD.closeConnection();
             } else if (choice == 4) {
+                BlockchainARM blockchain = new BlockchainARM(4); // Initialize the blockchain with a difficulty of 4
 
-                // Blockchain
+                while (true) {
+                    System.out.println("\nBlockchain Operations Menu:");
+                    System.out.println("1. Add Customer Data Block");
+                    System.out.println("2. Read Blockchain (List All Blocks)");
+                    System.out.println("3. Exit");
+                    System.out.print("Enter your choice: ");
+                    int operation = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (operation == 1) {
+                        // Add a customer data block and min it for POW
+                        System.out.print("Enter customer data to add to the blockchain: ");
+                        String customerData = scanner.nextLine();
+                        blockchain.addBlock(customerData);
+                        System.out.println("Customer data block added and mined successfully.");
+                    } else if (operation == 2) {
+                        // Prints current blockchain
+                        System.out.println("Current Blockchain:");
+                        blockchain.printBlockchain();
+                    } else if (operation == 3) {
+                        System.out.println("Exiting the blockchain application...");
+                        break;
+                    } else {
+                        System.out.println("Invalid operation. Please select a valid option.");
+                    }
+                }
             } else if (choice == 5) {
                     System.out.println("Exiting the program...");
                     break;
@@ -178,7 +204,6 @@ public class Main {
                 System.out.println("Invalid choice. Please enter a number between 1 and 5.");
             }
         }
-
         scanner.close();
     }
 }
