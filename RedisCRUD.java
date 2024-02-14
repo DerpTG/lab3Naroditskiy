@@ -1,3 +1,13 @@
+/** Project: Lab3 Database Assignment
+ * Purpose Details: Navigate and perform database operations
+ * Course: IST 242
+ * Author: Felix Naroditskiy
+ * Date Developed: 2/7/2024
+ * Last Date Changed: 2/14/2024
+ * Rev: 1.0
+
+ */
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
