@@ -1,11 +1,11 @@
-/** Project: Lab3 Database Assignment
+/**
+ * Project: Lab3 Database Assignment
  * Purpose Details: Navigate and perform database operations
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/14/2024
+ * Last Date Changed: 2/15/2024
  * Rev: 1.0
-
  */
 
 import java.sql.Connection;
@@ -14,18 +14,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class provides methods to perform CRUD operations on a MySQL database.
+ */
 public class MySQLCRUD {
     private String jdbcUrl;
     private String username;
     private String password;
 
+    /**
+     * Constructs a new MySQLCRUD object with the specified JDBC URL, username, and password.
+     * @param jdbcUrl The JDBC URL of the MySQL database.
+     * @param username The username to connect to the MySQL database.
+     * @param password The password to connect to the MySQL database.
+     */
     public MySQLCRUD(String jdbcUrl, String username, String password) {
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
     }
 
-    // Method to insert a customer
+    /**
+     * Inserts a new customer into the database.
+     * @param id The ID of the customer.
+     * @param firstName The first name of the customer.
+     * @param lastName The last name of the customer.
+     * @param city The city of the customer.
+     * @param email The email of the customer.
+     */
     public void insertCustomer(int id, String firstName, String lastName, String city, String email) {
         String sql = "INSERT INTO customers (id, firstName, lastName, city, email) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -41,7 +57,9 @@ public class MySQLCRUD {
         }
     }
 
-    // Method to view all customers
+    /**
+     * Retrieves and prints all customers from the database.
+     */
     public void getAllCustomers() {
         String sql = "SELECT id, firstName, lastName, city, email FROM customers";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -62,7 +80,11 @@ public class MySQLCRUD {
         }
     }
 
-    // Method to update a customer
+    /**
+     * Updates the first name of a customer with the specified ID.
+     * @param id The ID of the customer to update.
+     * @param newFirstName The new first name for the customer.
+     */
     public void updateCustomer(int id, String newFirstName) {
         String sql = "UPDATE customers SET firstName = ? WHERE id = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -75,7 +97,10 @@ public class MySQLCRUD {
         }
     }
 
-    // Method to delete a customer
+    /**
+     * Deletes the customer with the specified ID from the database.
+     * @param id The ID of the customer to delete.
+     */
     public void deleteCustomer(int id) {
         String sql = "DELETE FROM customers WHERE id = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -96,6 +121,9 @@ public class MySQLCRUD {
     public void setPassword(String password) { this.password = password; }
 }
 
+/**
+ * Represents a customer entity.
+ */
 class Customer {
     private int id;
     private String firstName;
@@ -103,6 +131,14 @@ class Customer {
     private String city;
     private String email;
 
+    /**
+     * Constructs a new Customer object with the specified attributes.
+     * @param id The ID of the customer.
+     * @param firstName The first name of the customer.
+     * @param lastName The last name of the customer.
+     * @param city The city of the customer.
+     * @param email The email of the customer.
+     */
     public Customer(int id, String firstName, String lastName, String city, String email) {
         this.id = id;
         this.firstName = firstName;
@@ -111,6 +147,10 @@ class Customer {
         this.email = email;
     }
 
+    /**
+     * Returns a string representation of the customer.
+     * @return A string representation of the customer.
+     */
     @Override
     public String toString() {
         return "Customer{" +

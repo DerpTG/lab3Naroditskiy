@@ -1,11 +1,11 @@
-/** Project: Lab3 Database Assignment
+/**
+ * Project: Lab3 Database Assignment
  * Purpose Details: Navigate and perform database operations
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/14/2024
+ * Last Date Changed: 2/15/2024
  * Rev: 1.0
-
  */
 
 import com.mongodb.MongoException;
@@ -16,6 +16,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.FindIterable;
 import org.bson.Document;
 
+/**
+ * This class provides methods to perform CRUD operations on a MongoDB database.
+ */
 public class MongoCRUD {
     private MongoClient mongoClient;
     private MongoDatabase database;
@@ -23,12 +26,20 @@ public class MongoCRUD {
     private String databaseName;
     private String collectionName;
 
+    /**
+     * Constructs a new MongoCRUD object with the specified database name and collection name.
+     * @param databaseName The name of the MongoDB database.
+     * @param collectionName The name of the MongoDB collection.
+     */
     public MongoCRUD(String databaseName, String collectionName) {
         this.databaseName = databaseName;
         this.collectionName = collectionName;
         initializeConnection();
     }
 
+    /**
+     * Initializes the connection to the MongoDB database.
+     */
     private void initializeConnection() {
         try {
             mongoClient = MongoClients.create("mongodb://localhost:27017");
@@ -39,6 +50,13 @@ public class MongoCRUD {
         }
     }
 
+    /**
+     * Inserts a new customer into the MongoDB collection.
+     * @param firstName The first name of the customer.
+     * @param lastName The last name of the customer.
+     * @param city The city of the customer.
+     * @param email The email of the customer.
+     */
     public void insertCustomer(String firstName, String lastName, String city, String email) {
         try {
             Document newCustomer = new Document("first_name", firstName)
@@ -52,6 +70,9 @@ public class MongoCRUD {
         }
     }
 
+    /**
+     * Retrieves and prints all customers from the MongoDB collection.
+     */
     public void listCustomers() {
         try {
             FindIterable<Document> customers = collection.find();
@@ -63,6 +84,11 @@ public class MongoCRUD {
         }
     }
 
+    /**
+     * Updates the first name of a customer in the MongoDB collection.
+     * @param oldFirstName The current first name of the customer.
+     * @param newFirstName The new first name to update for the customer.
+     */
     public void updateCustomer(String oldFirstName, String newFirstName) {
         try {
             Document updatedCustomer = new Document("$set", new Document("first_name", newFirstName));
@@ -73,6 +99,10 @@ public class MongoCRUD {
         }
     }
 
+    /**
+     * Deletes a customer from the MongoDB collection.
+     * @param name The first name of the customer to delete.
+     */
     public void deleteCustomer(String name) {
         try {
             collection.deleteOne(new Document("first_name", name));
@@ -82,6 +112,9 @@ public class MongoCRUD {
         }
     }
 
+    /**
+     * Closes the connection to the MongoDB database.
+     */
     public void close() {
         if (mongoClient != null) {
             mongoClient.close();
@@ -107,4 +140,3 @@ public class MongoCRUD {
         }
     }
 }
-

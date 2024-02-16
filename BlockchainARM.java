@@ -1,13 +1,3 @@
-/** Project: Lab3 Database Assignment
- * Purpose Details: Navigate and perform database operations
- * Course: IST 242
- * Author: Felix Naroditskiy
- * Date Developed: 2/7/2024
- * Last Date Changed: 2/14/2024
- * Rev: 1.0
-
- */
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -21,6 +11,11 @@ class Block {
     private long timeStamp;
     private int nonce;
 
+    /**
+     * Constructor for creating a new block.
+     * @param data The data to be stored in the block.
+     * @param previousHash The hash of the previous block in the chain.
+     */
     public Block(String data, String previousHash) {
         this.data = data;
         this.previousHash = previousHash;
@@ -28,6 +23,10 @@ class Block {
         this.hash = calculateHash();
     }
 
+    /**
+     * Calculates the hash of the block.
+     * @return The calculated hash value.
+     */
     public String calculateHash() {
         try {
             String input = previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + data;
@@ -45,6 +44,10 @@ class Block {
         }
     }
 
+    /**
+     * Mines the block with a given difficulty.
+     * @param difficulty The difficulty level for mining.
+     */
     public void mineBlock(int difficulty) {
         String target = new String(new char[difficulty]).replace('\0', '0');
         while (!hash.substring(0, difficulty).equals(target)) {
@@ -54,7 +57,7 @@ class Block {
         System.out.println("Block Mined!!! : " + hash);
     }
 
-    // Getters
+    // Getter for block data
     public String getData() { return data; }
 }
 
@@ -62,16 +65,28 @@ class BlockchainARM {
     private List<Block> chain;
     private int difficulty;
 
+    /**
+     * Constructor for creating a new blockchain.
+     * @param difficulty The difficulty level for mining blocks.
+     */
     public BlockchainARM(int difficulty) {
         this.chain = new ArrayList<>();
         this.difficulty = difficulty;
         chain.add(createGenesisBlock());
     }
 
+    /**
+     * Creates the genesis block for the blockchain.
+     * @return The genesis block.
+     */
     private Block createGenesisBlock() {
         return new Block("Genesis Block", "0");
     }
 
+    /**
+     * Adds a new block to the blockchain.
+     * @param data The data to be stored in the new block.
+     */
     public void addBlock(String data) {
         if (chain.isEmpty()) {
             System.err.println("Blockchain is uninitialized, missing genesis block.");
@@ -83,6 +98,9 @@ class BlockchainARM {
         chain.add(newBlock);
     }
 
+    /**
+     * Prints the contents of the blockchain.
+     */
     public void printBlockchain() {
         if (chain.isEmpty()) {
             System.out.println("Blockchain is empty.");
