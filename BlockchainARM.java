@@ -14,28 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class StringUtil {
-    public static String applySha256(String input) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(input.getBytes("UTF-8"));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String getDificultyString(int difficulty) {
-        return new String(new char[difficulty]).replace('\0', '0');
-    }
-}
-
 class Block {
     public String hash;
     public String previousHash;
@@ -51,13 +29,24 @@ class Block {
     }
 
     public String calculateHash() {
-        String calculatedhash = StringUtil.applySha256(
-                previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + data);
-        return calculatedhash;
+        try {
+            String input = previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + data;
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(input.getBytes("UTF-8"));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void mineBlock(int difficulty) {
-        String target = StringUtil.getDificultyString(difficulty);
+        String target = new String(new char[difficulty]).replace('\0', '0');
         while (!hash.substring(0, difficulty).equals(target)) {
             nonce++;
             hash = calculateHash();
@@ -66,7 +55,7 @@ class Block {
     }
 
     // Getters
-    public String getData() {return data;}
+    public String getData() { return data; }
 }
 
 class BlockchainARM {
@@ -90,12 +79,8 @@ class BlockchainARM {
         }
         Block previousBlock = chain.get(chain.size() - 1);
         Block newBlock = new Block(data, previousBlock.hash);
-        try {
-            newBlock.mineBlock(difficulty);
-            chain.add(newBlock);
-        } catch (Exception e) {
-            System.err.println("Error mining block: " + e.getMessage());
-        }
+        newBlock.mineBlock(difficulty);
+        chain.add(newBlock);
     }
 
     public void printBlockchain() {
@@ -112,9 +97,7 @@ class BlockchainARM {
     }
 
     // Getters and Setters
-    public List<Block> getChain() {return new ArrayList<>(this.chain);}
-
-    public int getDifficulty() {return difficulty;}
-
-    public void setDifficulty(int difficulty) {this.difficulty = difficulty;}
+    public List<Block> getChain() { return new ArrayList<>(this.chain); }
+    public int getDifficulty() { return difficulty; }
+    public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
 }
