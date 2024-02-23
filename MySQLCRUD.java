@@ -4,8 +4,8 @@
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/15/2024
- * Rev: 1.0
+ * Last Date Changed: 2/23/2024
+ * Rev: 1.1
  */
 
 import java.sql.Connection;
@@ -67,7 +67,7 @@ public class MySQLCRUD {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Customer customer = new Customer(
-                        resultSet.getInt("id"),
+                        resultSet.getString("id"),
                         resultSet.getString("firstName"),
                         resultSet.getString("lastName"),
                         resultSet.getString("city"),
@@ -119,46 +119,4 @@ public class MySQLCRUD {
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-}
-
-/**
- * Represents a customer entity.
- */
-class Customer {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String city;
-    private String email;
-
-    /**
-     * Constructs a new Customer object with the specified attributes.
-     * @param id The ID of the customer.
-     * @param firstName The first name of the customer.
-     * @param lastName The last name of the customer.
-     * @param city The city of the customer.
-     * @param email The email of the customer.
-     */
-    public Customer(int id, String firstName, String lastName, String city, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.city = city;
-        this.email = email;
-    }
-
-    /**
-     * Returns a string representation of the customer.
-     * @return A string representation of the customer.
-     */
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", city='" + city + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

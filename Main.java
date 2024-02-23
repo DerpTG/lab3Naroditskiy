@@ -3,14 +3,16 @@
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/15/2024
- * Rev: 1.0
+ * Last Date Changed: 2/23/2024
+ * Rev: 1.1
  */
 
 /**
  * Import statement for utilizing the Scanner class from the java.util package.
+ * Import statement for utilizing Gson
  */
 import java.util.Scanner;
+import com.google.gson.Gson;
 
 /**
  * Main application class that provides a menu-driven interface for database and blockchain interactions.
@@ -144,6 +146,11 @@ public class Main {
                 if (operation == 1) {
                     System.out.println("Please enter customer details.");
                     /**
+                     * @param id The unique identifier for the customer.
+                     */
+                    System.out.print("Customer ID: ");
+                    String id = scanner.nextLine();
+                    /**
                      * @param firstName Customer's first name.
                      */
                     System.out.print("Enter First Name: ");
@@ -163,8 +170,14 @@ public class Main {
                      */
                     System.out.print("Enter Email: ");
                     String email = scanner.nextLine();
-                    // Inserts a new customer into MongoDB.
-                    mongoDBCRUD.insertCustomer(firstName, lastName, city, email);
+                    // Create a Customer object
+                    Customer customer = new Customer(id,firstName, lastName, city, email);
+
+                    // Serialize the Customer object to JSON using Gson
+                    String customerData = new Gson().toJson(customer);
+
+                    // Inserts the serialized customer data into MongoDB
+                    mongoDBCRUD.insertCustomer(customerData);
                     System.out.println("Inserted new customer into MongoDB.");
                 } else if (operation == 2) {
                     // Lists all customer records from MongoDB.
@@ -241,7 +254,11 @@ public class Main {
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
 
-                    redisCRUD.insertCustomer(id, firstName, lastName, city, email);
+                    // Serialize customer data to JSON using Gson
+                    Customer customer = new Customer(id, firstName, lastName, city, email);
+                    String jsonData = new Gson().toJson(customer);
+
+                    redisCRUD.insertCustomer(id, jsonData);
                 } else if (operation == 2) {
                     /**
                      * @param id The customer ID to retrieve details for.
@@ -276,7 +293,12 @@ public class Main {
                      */
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
-                    redisCRUD.updateCustomer(id, firstName, lastName, city, email);
+
+                    // Serialize updated customer data to JSON using Gson
+                    Customer customer = new Customer(id, firstName, lastName, city, email);
+                    String jsonData = new Gson().toJson(customer);
+
+                    redisCRUD.updateCustomer(id, jsonData);
                 } else if (operation == 4) {
                     /**
                      * @param id The customer ID to delete.
@@ -292,7 +314,6 @@ public class Main {
                 redisCRUD.closeConnection();
             } else if (choice == 4) {
                 BlockchainARM blockchain = new BlockchainARM(4); // Initialize the blockchain with a difficulty of 4
-
                 while (true) {
                     System.out.println("\nBlockchain Operations Menu:");
                     System.out.println("1. Add Customer Data Block");
@@ -304,13 +325,35 @@ public class Main {
                     scanner.nextLine(); // Consumes the newline character after input
 
                     if (operation == 1) {
-                        // Adds a customer data block and mines it for Proof of Work
-                        System.out.print("Enter customer data to add to the blockchain: ");
                         /**
-                         * @param customerData The data of the customer to be added to the blockchain.
+                         * @param id The customer ID for the record to update.
                          */
-                        String customerData = scanner.nextLine();
-                        blockchain.addBlock(customerData);
+                        System.out.print("Customer ID: ");
+                        String id = scanner.nextLine();
+                        /**
+                         * @param firstName The new first name for the customer.
+                         */
+                        System.out.print("First Name: ");
+                        String firstName = scanner.nextLine();
+                        /**
+                         * @param lastName The new last name for the customer.
+                         */
+                        System.out.print("Last Name: ");
+                        String lastName = scanner.nextLine();
+                        /**
+                         * @param city The new city for the customer.
+                         */
+                        System.out.print("City: ");
+                        String city = scanner.nextLine();
+                        /**
+                         * @param email The new email for the customer.
+                         */
+                        System.out.print("Email: ");
+                        String email = scanner.nextLine();
+
+                        Customer customer = new Customer(id, firstName, lastName, city, email);
+                        String gsonData = new Gson().toJson(customer);
+                        blockchain.addBlock(gsonData);
                         System.out.println("Customer data block added and mined successfully.");
                     } else if (operation == 2) {
                         // Prints the current blockchain
@@ -325,7 +368,7 @@ public class Main {
                         System.out.println("Invalid operation. Please select a valid option.");
                     }
                 }
-            } else if (choice == 5) {
+        } else if (choice == 5) {
                     System.out.println("Exiting the program...");
                     break;
             } else {

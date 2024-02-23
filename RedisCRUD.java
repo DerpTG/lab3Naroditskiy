@@ -4,15 +4,15 @@
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/15/2024
- * Rev: 1.0
+ * Last Date Changed: 2/23/2024
+ * Rev: 1.1
  */
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 /**
- * This class provides methods to perform CRUD operations on a Redis database.
+ * This class provides methods to perform CRUD operations on a Redis database using JSON serialization.
  */
 public class RedisCRUD {
     private Jedis jedis;
@@ -33,17 +33,11 @@ public class RedisCRUD {
     /**
      * Inserts a new customer into the Redis database.
      * @param id The ID of the customer.
-     * @param firstName The first name of the customer.
-     * @param lastName The last name of the customer.
-     * @param city The city of the customer.
-     * @param email The email address of the customer.
+     * @param gsonData The Gson serialized data of the customer.
      */
-    public void insertCustomer(String id, String firstName, String lastName, String city, String email) {
+    public void insertCustomer(String id, String gsonData) {
         try {
-            jedis.hset("customer:" + id, "firstName", firstName);
-            jedis.hset("customer:" + id, "lastName", lastName);
-            jedis.hset("customer:" + id, "city", city);
-            jedis.hset("customer:" + id, "email", email);
+            jedis.set(id, gsonData);
             System.out.println("Customer added successfully with ID: " + id);
         } catch (JedisConnectionException e) {
             System.err.println("Error inserting customer: " + e.getMessage());
@@ -56,12 +50,10 @@ public class RedisCRUD {
      */
     public void getCustomer(String id) {
         try {
-            if (jedis.exists("customer:" + id)) {
+            String json = jedis.get(id);
+            if (json != null) {
                 System.out.println("Customer found:");
-                System.out.println("First Name: " + jedis.hget("customer:" + id, "firstName"));
-                System.out.println("Last Name: " + jedis.hget("customer:" + id, "lastName"));
-                System.out.println("City: " + jedis.hget("customer:" + id, "city"));
-                System.out.println("Email: " + jedis.hget("customer:" + id, "email"));
+                System.out.println(json);
             } else {
                 System.out.println("Customer not found with ID: " + id);
             }
@@ -73,18 +65,12 @@ public class RedisCRUD {
     /**
      * Updates the details of an existing customer in Redis.
      * @param id The ID of the customer to update.
-     * @param firstName The new first name of the customer.
-     * @param lastName The new last name of the customer.
-     * @param city The new city of the customer.
-     * @param email The new email address of the customer.
+     * @param gsonData The Gson serialized data of the customer.
      */
-    public void updateCustomer(String id, String firstName, String lastName, String city, String email) {
+    public void updateCustomer(String id, String gsonData) {
         try {
-            if (jedis.exists("customer:" + id)) {
-                jedis.hset("customer:" + id, "firstName", firstName);
-                jedis.hset("customer:" + id, "lastName", lastName);
-                jedis.hset("customer:" + id, "city", city);
-                jedis.hset("customer:" + id, "email", email);
+            if (jedis.exists(id)) {
+                jedis.set(id, gsonData);
                 System.out.println("Customer updated successfully with ID: " + id);
             } else {
                 System.out.println("Customer not found with ID: " + id + " for update.");
@@ -100,8 +86,8 @@ public class RedisCRUD {
      */
     public void deleteCustomer(String id) {
         try {
-            if (jedis.exists("customer:" + id)) {
-                jedis.del("customer:" + id);
+            if (jedis.exists(id)) {
+                jedis.del(id);
                 System.out.println("Customer deleted successfully with ID: " + id);
             } else {
                 System.out.println("Customer not found with ID: " + id + " for deletion.");

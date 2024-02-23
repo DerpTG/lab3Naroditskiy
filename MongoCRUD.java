@@ -4,8 +4,8 @@
  * Course: IST 242
  * Author: Felix Naroditskiy
  * Date Developed: 2/7/2024
- * Last Date Changed: 2/15/2024
- * Rev: 1.0
+ * Last Date Changed: 2/23/2024
+ * Rev: 1.1
  */
 
 import com.mongodb.MongoException;
@@ -52,17 +52,11 @@ public class MongoCRUD {
 
     /**
      * Inserts a new customer into the MongoDB collection.
-     * @param firstName The first name of the customer.
-     * @param lastName The last name of the customer.
-     * @param city The city of the customer.
-     * @param email The email of the customer.
+     * @param customerData The JSON string representing the customer data.
      */
-    public void insertCustomer(String firstName, String lastName, String city, String email) {
+    public void insertCustomer(String customerData) {
         try {
-            Document newCustomer = new Document("first_name", firstName)
-                    .append("last_name", lastName)
-                    .append("city", city)
-                    .append("email", email);
+            Document newCustomer = Document.parse(customerData);
             collection.insertOne(newCustomer);
             System.out.println("Customer added successfully.");
         } catch (MongoException e) {

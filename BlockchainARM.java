@@ -1,3 +1,13 @@
+/**
+ * Project: Lab3 Database Assignment
+ * Purpose Details: Navigate and perform database operations
+ * Course: IST 242
+ * Author: Felix Naroditskiy
+ * Date Developed: 2/7/2024
+ * Last Date Changed: 2/23/2024
+ * Rev: 1.1
+ */
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -85,15 +95,15 @@ class BlockchainARM {
 
     /**
      * Adds a new block to the blockchain.
-     * @param data The data to be stored in the new block.
+     * @param gsonData The data to be stored in the new block.
      */
-    public void addBlock(String data) {
+    public void addBlock(String gsonData) {
         if (chain.isEmpty()) {
             System.err.println("Blockchain is uninitialized, missing genesis block.");
             return;
         }
         Block previousBlock = chain.get(chain.size() - 1);
-        Block newBlock = new Block(data, previousBlock.hash);
+        Block newBlock = new Block(gsonData, previousBlock.hash);
         newBlock.mineBlock(difficulty);
         chain.add(newBlock);
     }
